@@ -12,6 +12,7 @@ struct TLButton: View {
     let backGround: Color
     var action: () -> Void
     var body: some View {
+        
         Button {
             action()
         } label: {
@@ -21,8 +22,11 @@ struct TLButton: View {
                 Text(title)
                     .foregroundStyle(Color.white)
                     .bold(true)
+                    
             }
         }
+        .frame(width: UIScreen.main.bounds.width - 70, height: 50)
+        
     }
 }
 

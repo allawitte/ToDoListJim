@@ -21,16 +21,18 @@ struct TodoListView: View {
     var body: some View {
         NavigationView { 
             VStack {
-                List(model.todos) { item in
-                    ItemView(item: item)
-                        .swipeActions {
-                            Button {
-                                model.delete(id: item.id)
-                            } label: {
-                                Text("Delete")
+                List($model.todos) { $item in
+                    if !item.isHidden {
+                        ItemView(item: item)
+                            .swipeActions {
+                                Button {
+                                    model.delete(id: item.id)
+                                } label: {
+                                    Text("Delete")
+                                }
                             }
-                        }
-                        .tint(.red)
+                            .tint(.red)
+                    }
 
                 }
                 .listStyle(.plain)

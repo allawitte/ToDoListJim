@@ -21,9 +21,9 @@ class NewItemViewModel: ObservableObject {
     @Published var mainModel = TodoListViewModel()
     //@Published var service = Service()
 
-    init() {
-        print("Service Item \(Service.item)")
-    }
+//    init() {
+//        print("Service Item \(Service.item)")
+//    }
     
     func save() {
         
@@ -40,10 +40,17 @@ class NewItemViewModel: ObservableObject {
             indexing = item.indexing
             let nextOrder: Int = mainModel.getNextOrder(parentId: parentId)
             indexing.append(nextOrder)
+            if let index = Service.allItems.firstIndex(where: {$0.id == parentId}) {
+                var parentItem = Service.allItems[index]
+                if !parentItem.isParent {
+                    parentItem.isParent = true
+                    TodoListViewModel.saveOneItem(item: parentItem)
+                }
+            }
             print("subitem")
         } else {
             level = 1
-            order = mainModel.order
+            order = mainModel.getParentsOrder() + 1  //Service.order + 1
             indexing = [order]
             print("new item")
         }

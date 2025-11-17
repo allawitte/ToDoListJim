@@ -13,45 +13,54 @@ struct ItemView: View {
     @StateObject var viewModel = ItemViewModel()
     @StateObject var model = TodoListViewModel()
     @StateObject var service = Service()
+    
     var body: some View {
         HStack {
             //NavigationStack{
+            
                 HStack {
                     VStack(alignment: .leading){
                         HStack {
+                            if item.isParent {
+                                Image(systemName: item.isCollapsed ? "chevron.right" : "chevron.down")
+                                    .font(.system(size: 10))
+                                    .onTapGesture {
+                                        model.toggleCollapse(id: item.id)
+                                    }
+                            }
                             Text(viewModel.getNumeration(item: item))
+                                .font(.system(size: 12))
                             Text(item.title)
                                 .font(.body)
                         }
+
                         Text("\(Date(timeIntervalSince1970: item.dueDate).formatted(date: .abbreviated, time: .shortened))")
                             .font(.footnote)
                             .foregroundStyle(Color(.darkGray))
-                        Text("Order: \(item.order)  Level:\(item.level)")
+                       // Text("Order: \(item.order)  Level:\(item.level)")
+                        Text("is collapsed: \(item.isCollapsed)")
+                        
                     }
                     .padding(.leading, viewModel.getInset(item: item))
                     Spacer()
-                    Button {
-                        model.isNewRootItem = false
-                        service.isPresented = true
-                        Service.item = item
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+                    Image(systemName: "plus")
+                        .onTapGesture {
+                            model.isNewRootItem = false
+                            service.isPresented = true
+                            Service.item = item
+                        }
                     
-
-                   
-                   
-                    
-                    Button {
-                        viewModel.toggleIsDone(item: item)
-                    } label: {
-                        Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(.teal)
-                    }
+                    Image(systemName: item.isDone ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(.teal)
                     .border(.gray)
-                }.sheet(isPresented: $service.isPresented) {
+                    .onTapGesture {
+                        viewModel.toggleIsDone(item: item)
+                    }
+                }
+                .sheet(isPresented: $service.isPresented) {
                     NewItemView(newItemPresented: $service.isPresented)
-            }
+                }
+          
 
         }
     } //

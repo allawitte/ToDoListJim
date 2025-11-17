@@ -17,6 +17,9 @@ struct TodoListItem: Codable, Identifiable {
     var isDone: Bool
     let parentId: String
     var indexing: [Int]
+    var isCollapsed: Bool = false
+    var isParent: Bool = false
+    var isHidden: Bool = false
     
     mutating func setDone(_ state: Bool) {
         isDone = state
